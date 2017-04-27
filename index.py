@@ -23,10 +23,27 @@ def md5_file(file_path):
 def generate_serial(*args):
     return "{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}".format(*args)
 
-@click.command()
-@click.option("--key", help="The path of retail bin file")
-@click.option("--amiibo", help="The path of amiibo dump file")
-def run(key, amiibo):
+def raise_message(message):
+    click.echo("\n{0}\n".format(message))
+
+@click.group()
+def cli():
+    pass
+
+@cli.command()
+@click.option("--key", required=True, help="The path of retail bin file")
+@click.option("--amiibo", required=True, help="The path of amiibo dump file")
+def create(key, amiibo):
+    """Create new amiibo file with random serial"""
+
+    if os.path.exists(key) is False:
+        raise_message("The path of retail bin file is not file")
+        raise SystemExit(0)
+
+    if os.path.exists(amiibo) is False:
+        raise_message("The path of amiibo bin file is not file")
+        raise SystemExit(0)
+
     click.echo("Changer")
     click.echo("-----------")
     click.echo("Current version  : {}".format(__VERSION__))
@@ -119,6 +136,6 @@ def run(key, amiibo):
 
 if __name__ == '__main__':
     if sys.version_info < (3,0,0):
-        print("\nDon\'t not support python 2, Please run on python 3\n")
+        raise_message("Don\'t not support python 2, Please run on python 3")
     else:
-        run()
+        cli()
