@@ -43,11 +43,14 @@ def run(key, amiibo):
     uid6 = random.randint(0, 255)
 
     bcc0 = uid0 ^ uid1 ^ uid2
-    bcc1 = uid3 ^ uid4 ^ uid5 ^uid6
+    bcc1 = uid3 ^ uid4 ^ uid5 ^ uid6
 
     serial = generate_serial(uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1)
 
     click.echo("Generated serial : {}".format(serial))
+    click.echo("Generated values : uid0={uid0} uid1={uid1} uid2={uid2} bcc0={bcc0} uid3={uid3} uid4={uid4} uid5={uid5} uid6={uid6} bcc1={bcc1}".format(
+        uid0=uid0, uid1=uid1, uid2=uid2, bcc0=bcc0, uid3=uid3, uid4=uid4, uid5=uid5, uid6=uid6, bcc1=bcc1
+    ))
     click.echo("-----------")
 
     # Decrypt amiibo
