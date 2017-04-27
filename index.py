@@ -16,6 +16,9 @@ results_root = os.path.join(program_root, "results")
 
 amiitool = os.path.join(tools_root, "amiitool")
 
+def md5_file(file_path):
+    return hashlib.md5(open(file_path.replace('\\', ''), 'rb').read()).hexdigest()
+
 @click.command()
 @click.option("--key", help="The path of retail bin file")
 @click.option("--amiibo", help="The path of amiibo dump file")
@@ -60,15 +63,34 @@ def run(key, amiibo):
     stdout, stderr = shell.communicate()
 
     if stderr is None:
-        click.echo("=> MD5: {}".format(
-            hashlib.md5(open(decrypt_filepath.replace('\\', ''), 'rb').read()).hexdigest()
-        ))
+        click.echo("=> MD5: {}".format(md5_file(decrypt_filepath)))
         click.echo("=> OK")
     else:
+        click.echo(stderr)
         click.echo("=> Failed")
 
-    # TODO: change
-    # click.echo("Changing ...")
+        raise SystemExit(0)
+
+    # Change amiibo serial
+    click.echo("Start changing ...")
+
+    try:
+        with open(decrypt_filepath.replace('\\', ''), 'r+b') as f:
+            f.seek(0, 0)
+            f.write(bytes([bcc1]))
+
+            f.seek(0x1D4, 0)
+            f.write(bytes([bcc0, uid0, uid1, uid2, uid3, uid4, uid5, uid6]))
+
+            f.close()
+
+        click.echo("=> MD5: {}".format(md5_file(decrypt_filepath)))
+        click.echo("=> OK")
+    except Exception as e:
+        click.echo(e)
+        click.echo("=> Failed")
+
+        raise SystemExit(0)
 
     # TODO: encrypt
     # click.echo("Encrypting ...")
