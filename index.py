@@ -19,6 +19,9 @@ amiitool = os.path.join(tools_root, "amiitool")
 def md5_file(file_path):
     return hashlib.md5(open(file_path.replace('\\', ''), 'rb').read()).hexdigest()
 
+def generate_serial(*args):
+    return "{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}".format(*args)
+
 @click.command()
 @click.option("--key", help="The path of retail bin file")
 @click.option("--amiibo", help="The path of amiibo dump file")
@@ -42,11 +45,9 @@ def run(key, amiibo):
     bcc0 = uid0 ^ uid1 ^ uid2
     bcc1 = uid3 ^ uid4 ^ uid5 ^uid6
 
-    click.echo(
-        "Generated serial : {:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}".format(
-            uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1
-        )
-    )
+    serial = generate_serial(uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1)
+
+    click.echo("Generated serial : {}".format(serial))
     click.echo("-----------")
 
     # Decrypt amiibo
@@ -75,14 +76,12 @@ def run(key, amiibo):
     click.echo("Start changing ...")
 
     try:
-        with open(decrypt_filepath.replace('\\', ''), 'r+b') as f:
-            f.seek(0, 0)
-            f.write(bytes([bcc1]))
-
-            f.seek(0x1D4, 0)
-            f.write(bytes([bcc0, uid0, uid1, uid2, uid3, uid4, uid5, uid6]))
-
-            f.close()
+        with open(decrypt_filepath, 'r+b') as fh:
+            fh.seek(0, 0)
+            fh.write(bytes([bcc1]))
+            fh.seek(0x1D4, 0)
+            fh.write(bytes([bcc0, uid0, uid1, uid2, uid3, uid4, uid5, uid6]))
+            fh.close()
 
         click.echo("=> MD5: {}".format(md5_file(decrypt_filepath)))
         click.echo("=> OK")
@@ -92,8 +91,27 @@ def run(key, amiibo):
 
         raise SystemExit(0)
 
-    # TODO: encrypt
-    # click.echo("Encrypting ...")
+    # Encrypt changed amiibo decrypt bin
+    encrypt_filename = "{0}_{1}.bin".format(os.path.splitext(os.path.basename(amiibo))[0], serial)
+    encrypt_filepath = os.path.join(results_root, encrypt_filename)
+    encrypt_command  = "{amiitool} -e -k {key} -i {decrypt_filepath} -o {encrypt_filepath}".format(
+        amiitool=amiitool, key=key, decrypt_filepath=decrypt_filepath, encrypt_filepath=encrypt_filepath
+    )
+
+    click.echo("Start encrypting ...")
+    click.echo("=> {}".format(encrypt_command))
+
+    shell = subprocess.Popen(encrypt_command, shell=True)
+    stdout, stderr = shell.communicate()
+
+    if stderr is None:
+        click.echo("=> MD5: {}".format(md5_file(encrypt_filepath)))
+        click.echo("=> OK")
+    else:
+        click.echo(stderr)
+        click.echo("=> Failed")
+
+        raise SystemExit(0)
 
 if __name__ == '__main__':
     run()

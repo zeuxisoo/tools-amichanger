@@ -1,10 +1,11 @@
 usage:
 	@echo
-	@echo "Command    : Description"
-	@echo "---------- : ----------------"
-	@echo "make venv  : Create virtual environment"
-	@echo "make tools : Generate related tools"
-	@echo "make clean : Clean the environment, generated tools and decrypted file"
+	@echo "Command            : Description"
+	@echo "------------------ : ----------------"
+	@echo "make venv          : Create virtual environment"
+	@echo "make tools         : Generate related tools"
+	@echo "make clean         : Clean the environment, generated tools and decrypted, changed file"
+	@echo "make clean-results : Clean the decrypt and encrypt files only"
 	@echo
 
 venv:
@@ -18,6 +19,8 @@ tools: clean-tools
 clean-tools:
 	@bash ./scripts/amiitool.sh uninstall
 
-clean: clean-tools
-	@rm -rf venv
+clean-results:
 	@rm -rf results/*.bin
+
+clean: clean-tools clean-result
+	@rm -rf venv
