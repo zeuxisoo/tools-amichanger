@@ -22,5 +22,5 @@ clean-tools:
 clean-results:
 	@rm -rf results/*.bin
 
-clean: clean-tools clean-result
+clean: clean-tools clean-results
 	@rm -rf venv
