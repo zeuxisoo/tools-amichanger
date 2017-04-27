@@ -18,10 +18,21 @@ def cli(ctx, debug):
 @click.option("--key", required=True, help="The path of retail bin file")
 @click.option("--amiibo", required=True, help="The path of amiibo dump file")
 def create(ctx, key, amiibo):
-    """Create new amiibo file with random serial"""
-
+    """
+    Create new amiibo file with random serial
+    """
     commands.create(ctx, key, amiibo)
 
+@cli.command()
+@click.pass_context
+@click.option("--key", required=True, help="The path of retail bin file")
+@click.option("--amiibo", required=True, help="The path of amiibo dump file")
+@click.option("--count", required=True, type=int, help="How many number of amiibo file do you want to generate?")
+def multi(ctx, key, amiibo, count):
+    """
+    Create multiple amiibo files with random serial
+    """
+    commands.multi(ctx, key, amiibo, count)
 
 if __name__ == '__main__':
     if sys.version_info < (3,0,0):
