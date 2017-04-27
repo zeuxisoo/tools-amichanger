@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import random
 import subprocess
 import hashlib
@@ -117,4 +118,7 @@ def run(key, amiibo):
         raise SystemExit(0)
 
 if __name__ == '__main__':
-    run()
+    if sys.version_info < (3,0,0):
+        print("\nDon\'t not support python 2, Please run on python 3\n")
+    else:
+        run()
