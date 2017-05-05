@@ -6,10 +6,13 @@ usage:
 	@echo
 
 ami: clean-ami
-	git clone https://github.com/socram8888/amiitool.git
-	cd amiitool/mbedtls && git submodule init && git submodule update --recursive
-	cd amiitool && make
-	cd amiitool && ar q libamiibo.a amiibo.o && ar q libkeygen.a keygen.o && ar q libdrbg.a drbg.o
+	cd changer && git clone https://github.com/socram8888/amiitool.git
+	cd changer/amiitool/mbedtls && git submodule init && git submodule update --recursive
+	cd changer/amiitool && make
+	cd changer/amiitool && \
+		ar q libamiibo.a amiibo.o && \
+		ar q libkeygen.a keygen.o && \
+		ar q libdrbg.a drbg.o
 
 clean-ami:
-	rm -rf amiitool
+	rm -rf changer/amiitool

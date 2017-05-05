@@ -5,6 +5,7 @@ import (
 
     "github.com/urfave/cli"
 
+    "github.com/zeuxisoo/tools-amichanger/changer"
     "github.com/zeuxisoo/tools-amichanger/utils/file"
     "github.com/zeuxisoo/tools-amichanger/utils/log"
 )
@@ -49,6 +50,16 @@ func create(ctx *cli.Context) error {
         log.Error(err.Error())
         return nil
     }
+
+    //
+    nfc3dAmiiboKeys, err := changer.LoadAmiiboKeys(key)
+    if err != nil {
+        log.Error(err.Error())
+        return nil
+    }
+
+    // TODO: unpack
+    log.Error(nfc3dAmiiboKeys)
 
     return nil
 }
