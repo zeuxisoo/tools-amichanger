@@ -1,2 +1,6 @@
 package: github.com/zeuxisoo/tools-amichanger
-import: []
+import:
+- package: github.com/urfave/cli
+  version: ^1.19.1
+- package: github.com/Sirupsen/logrus
+  version: ^0.11.5

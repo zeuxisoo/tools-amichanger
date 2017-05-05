@@ -1,0 +1,8 @@
+hash: b6c0eef920a34116622ce00c88771d6dbb93fa005eeeb6cb07397547357c0008
+updated: 2017-05-05T15:59:16.848248342+08:00
+imports:
+- name: github.com/Sirupsen/logrus
+  version: ba1b36c82c5e05c4f912a88eab0dcd91a171688f
+- name: github.com/urfave/cli
+  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
+testImports: []
