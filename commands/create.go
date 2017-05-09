@@ -52,14 +52,13 @@ func create(ctx *cli.Context) error {
     }
 
     //
-    nfc3dAmiiboKeys, err := changer.LoadAmiiboKeys(key)
+    changerEngine := changer.NewChangerEngine()
+
+    err = changerEngine.LoadAmiiboKeys(key)
     if err != nil {
         log.Error(err.Error())
         return nil
     }
-
-    // TODO: unpack
-    log.Error(nfc3dAmiiboKeys)
 
     return nil
 }

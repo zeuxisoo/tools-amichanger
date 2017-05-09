@@ -27,14 +27,20 @@ const (
     CHANGER_PACK_CANNOT_SAVE_MORE_UNPACK_FILE   = C.AMIIBO_PACK_CANNOT_SAVE_MORE_UNPACK_FILE
 )
 
-func LoadAmiiboKeys(path string) (C.nfc3d_amiibo_keys, error) {
-    var nfc3dAmiiboKeys C.nfc3d_amiibo_keys
+type ChangerEngine struct {
+    nfc3dAmiiboKeys C.nfc3d_amiibo_keys
+}
 
+func NewChangerEngine() *ChangerEngine {
+    return &ChangerEngine{}
+}
+
+func (this *ChangerEngine) LoadAmiiboKeys(path string) error {
     keyPath := C.CString(path)
 
-    if C.amiibo_load_keys(&nfc3dAmiiboKeys, keyPath) == false {
-        return nfc3dAmiiboKeys, errors.New(fmt.Sprintf("Could not load keys from %s", path))
+    if C.amiibo_load_keys(&this.nfc3dAmiiboKeys, keyPath) == false {
+        return errors.New(fmt.Sprintf("Could not load keys from %s", path))
     }
 
-    return nfc3dAmiiboKeys, nil
+    return nil
 }
