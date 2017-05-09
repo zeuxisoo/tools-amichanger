@@ -97,11 +97,9 @@ func create(ctx *cli.Context) error {
     // Unpack the selected file
     log.Info("Unpacking the amiibo file")
 
-    unpackFileBasename  := file.FileNameWithoutExtension(file.Basename(amiibo))
-    unpackFileExtension := file.Extension(amiibo)[1:]
-
-    unpackedFilename    := fmt.Sprintf("%s_decrypt.%s", unpackFileBasename, unpackFileExtension)
-    unpackedFilePath    := filepath.Join(configs.ResultsPath, unpackedFilename)
+    unpackFilename   := file.FileNameWithoutExtension(file.Basename(amiibo))
+    unpackedFilename := fmt.Sprintf("%s_decrypt.bin", unpackFilename)
+    unpackedFilePath := filepath.Join(configs.ResultsPath, unpackedFilename)
 
     log.Infof("=> Unpacked file path : %s", unpackedFilePath)
 
@@ -119,11 +117,9 @@ func create(ctx *cli.Context) error {
     // Copy unpacked file for edit
     log.Infof("Copying unpacked file")
 
-    copyUnpackFileBasename  := file.FileNameWithoutExtension(file.Basename(unpackedFilePath))
-    copyUnpackFileExtension := file.Extension(amiibo)[1:]
-
-    copyUnpackedFilename    := fmt.Sprintf("%s_copy.%s", copyUnpackFileBasename, copyUnpackFileExtension)
-    copyUnpackedFilePath    := filepath.Join(configs.ResultsPath, copyUnpackedFilename)
+    copyUnpackFilename   := file.FileNameWithoutExtension(file.Basename(unpackedFilePath))
+    copyUnpackedFilename := fmt.Sprintf("%s_copy.bin", copyUnpackFilename)
+    copyUnpackedFilePath := filepath.Join(configs.ResultsPath, copyUnpackedFilename)
 
     log.Infof("=> Copied file path : %s", copyUnpackedFilePath)
 
@@ -156,11 +152,9 @@ func create(ctx *cli.Context) error {
     // Pack the duplicated and changed file
     log.Info("Packing the amiibo file")
 
-    packFileBasename  := file.FileNameWithoutExtension(file.Basename(amiibo))
-    packFileExtension := file.Extension(amiibo)[1:]
-
-    packedFilename    := fmt.Sprintf("%s_%s.%s", packFileBasename, serial, packFileExtension)
-    packedFilePath    := filepath.Join(configs.ResultsPath, packedFilename)
+    packFilename   := file.FileNameWithoutExtension(file.Basename(amiibo))
+    packedFilename := fmt.Sprintf("%s_%s.bin", packFilename, serial)
+    packedFilePath := filepath.Join(configs.ResultsPath, packedFilename)
 
     log.Infof("=> Packed file path : %s", packedFilePath)
 
