@@ -1,6 +1,8 @@
 package commands
 
 import (
+    "os"
+    "io"
     "fmt"
     "errors"
     "time"
@@ -115,6 +117,28 @@ func create(ctx *cli.Context) error {
         log.Infof("=> MD5: %s", md5)
     }
 
+    // Copy unpacked file for edit
+    log.Infof("Copying unpacked file")
+
+    copyUnpackFileBasename  := file.FileNameWithoutExtension(file.Basename(unpackedFilePath))
+    copyUnpackFileExtension := file.Extension(amiibo)[1:]
+
+    copyUnpackedFilename    := fmt.Sprintf("%s_copy.%s", copyUnpackFileBasename, copyUnpackFileExtension)
+    copyUnpackedFilePath    := filepath.Join(configs.ResultsPath, copyUnpackedFilename)
+
+    log.Infof("=> Copied file path : %s", copyUnpackedFilePath)
+
+    err = copyFile(unpackedFilePath, copyUnpackedFilePath)
+    if err != nil {
+        log.Error("=> %s", err.Error())
+        return nil
+    }else{
+        md5, _ := file.Md5Sum(copyUnpackedFilePath)
+
+        log.Infof("=> OK")
+        log.Infof("=> MD5: %s", md5)
+    }
+
     // Pack the decrypted file
     log.Info("Packing the amiibo file")
 
@@ -126,7 +150,7 @@ func create(ctx *cli.Context) error {
 
     log.Infof("=> Packed file path : %s", packedFilePath)
 
-    err = changerEngine.PackAmiibo(unpackedFilePath, packedFilePath)
+    err = changerEngine.PackAmiibo(copyUnpackedFilePath, packedFilePath)
     if err != nil {
         log.Error("=> %s", err.Error())
         return nil
@@ -162,4 +186,30 @@ func randomInt(min int, max int) uint8 {
 
 func mixSerial(uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1 uint8) string {
     return fmt.Sprintf("%02X%02X%02X%02X%02X%02X%02X%02X%02X", uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1)
+}
+
+func copyFile(sourceFilePath, destinationFilePath string) error {
+    sourceFile, err := os.Open(sourceFilePath)
+    if err != nil {
+        return err
+    }
+    defer sourceFile.Close()
+
+    destinationFile, err := os.Create(destinationFilePath)
+    if err != nil {
+        return err
+    }
+    defer destinationFile.Close()
+
+    _, err = io.Copy(destinationFile, sourceFile)
+    if err != nil {
+        return err
+    }
+
+    err = destinationFile.Sync()
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
