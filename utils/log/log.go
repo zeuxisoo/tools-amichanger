@@ -12,7 +12,7 @@ func init() {
     log.Formatter = &logrus.TextFormatter{
         ForceColors: true,
         TimestampFormat: "2006-01-02 15:04:05",
-        FullTimestamp: true,
+        FullTimestamp: false,
     }
 
     log.Level = logrus.DebugLevel
