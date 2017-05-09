@@ -115,6 +115,28 @@ func create(ctx *cli.Context) error {
         log.Infof("=> MD5: %s", md5)
     }
 
+    // Pack the decrypted file
+    log.Info("Packing the amiibo file")
+
+    packFileBasename  := file.FileNameWithoutExtension(file.Basename(amiibo))
+    packFileExtension := file.Extension(amiibo)[1:]
+
+    packedFilename    := fmt.Sprintf("%s_%s.%s", packFileBasename, serial, packFileExtension)
+    packedFilePath    := filepath.Join(configs.ResultsPath, packedFilename)
+
+    log.Infof("=> Packed file path : %s", packedFilePath)
+
+    err = changerEngine.PackAmiibo(unpackedFilePath, packedFilePath)
+    if err != nil {
+        log.Error("=> %s", err.Error())
+        return nil
+    }else{
+        md5, _ := file.Md5Sum(packedFilePath)
+
+        log.Infof("=> OK")
+        log.Infof("=> MD5: %s", md5)
+    }
+
     return nil
 }
 

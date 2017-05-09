@@ -78,3 +78,30 @@ func (this *ChangerEngine) UnpackAmiibo(originalFilePath string, unpackFilePath 
     return nil
 }
 
+func (this *ChangerEngine) PackAmiibo(unpackFilePath string, packFilePath string) error {
+    fromFilePath   := C.CString(unpackFilePath)
+    toFilePath     := C.CString(packFilePath)
+    packFileStatus := C.amiibo_pack_dump_file(&this.nfc3dAmiiboKeys, fromFilePath, toFilePath)
+
+    if packFileStatus == ERROR_PACK_CANNOT_OPEN_DUMP_FILE {
+        return errors.New(fmt.Sprintf("[PACK] Could not open input file %s", unpackFilePath))
+    }
+
+    if packFileStatus == ERROR_PACK_FORMAT_INVALID {
+        return errors.New(fmt.Sprintf("[PACK] Could not read from input %s", unpackFilePath))
+    }
+
+    if packFileStatus == ERROR_PACK_CANNOT_OPEN_UNPACK_FILE {
+        return errors.New(fmt.Sprintf("[PACK] Could not open output file %s", packFilePath))
+    }
+
+    if packFileStatus == ERROR_PACK_CANNOT_SAVE_UNPACK_FILE {
+        return errors.New(fmt.Sprintf("[PACK] Could not write to output %s", packFilePath))
+    }
+
+    if packFileStatus == ERROR_PACK_CANNOT_SAVE_MORE_UNPACK_FILE {
+        return errors.New(fmt.Sprintf("[PACK] Could not write more to output %s", packFilePath))
+    }
+
+    return nil
+}
