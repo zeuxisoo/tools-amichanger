@@ -175,6 +175,13 @@ func create(ctx *cli.Context) error {
         log.Infof("=> MD5: %s", md5)
     }
 
+    // Remove decrypted and copied file
+    log.Infof("Deleting generated files")
+    log.Infof("=> %s", unpackedFilePath)
+    log.Infof("=> %s", copyUnpackedFilePath)
+
+    file.Delete(unpackedFilePath, copyUnpackedFilePath)
+
     return nil
 }
 

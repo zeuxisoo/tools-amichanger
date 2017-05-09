@@ -74,3 +74,15 @@ func Copy(sourceFilePath, destinationFilePath string) error {
 
     return nil
 }
+
+func Delete(paths... string) []error {
+    var errs []error
+
+    for _, p := range paths {
+        if err := os.Remove(p); err != nil {
+            errs = append(errs, err)
+        }
+    }
+
+    return errs
+}
