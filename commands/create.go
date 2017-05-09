@@ -2,7 +2,6 @@ package commands
 
 import (
     "os"
-    "io"
     "fmt"
     "errors"
     "time"
@@ -128,7 +127,7 @@ func create(ctx *cli.Context) error {
 
     log.Infof("=> Copied file path : %s", copyUnpackedFilePath)
 
-    err = copyFile(unpackedFilePath, copyUnpackedFilePath)
+    err = file.Copy(unpackedFilePath, copyUnpackedFilePath)
     if err != nil {
         log.Error("=> %s", err.Error())
         return nil
@@ -203,28 +202,4 @@ func mixSerial(uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1 uint8) strin
     return fmt.Sprintf("%02X%02X%02X%02X%02X%02X%02X%02X%02X", uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1)
 }
 
-func copyFile(sourceFilePath, destinationFilePath string) error {
-    sourceFile, err := os.Open(sourceFilePath)
-    if err != nil {
-        return err
-    }
-    defer sourceFile.Close()
 
-    destinationFile, err := os.Create(destinationFilePath)
-    if err != nil {
-        return err
-    }
-    defer destinationFile.Close()
-
-    _, err = io.Copy(destinationFile, sourceFile)
-    if err != nil {
-        return err
-    }
-
-    err = destinationFile.Sync()
-    if err != nil {
-        return err
-    }
-
-    return nil
-}

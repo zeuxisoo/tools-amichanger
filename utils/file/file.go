@@ -48,3 +48,29 @@ func Md5Sum(path string) (string, error) {
 
     return fmt.Sprintf("%x", hasher.Sum(nil)), nil
 }
+
+func Copy(sourceFilePath, destinationFilePath string) error {
+    sourceFile, err := os.Open(sourceFilePath)
+    if err != nil {
+        return err
+    }
+    defer sourceFile.Close()
+
+    destinationFile, err := os.Create(destinationFilePath)
+    if err != nil {
+        return err
+    }
+    defer destinationFile.Close()
+
+    _, err = io.Copy(destinationFile, sourceFile)
+    if err != nil {
+        return err
+    }
+
+    err = destinationFile.Sync()
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
