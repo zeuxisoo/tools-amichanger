@@ -3,7 +3,9 @@ package commands
 import (
     "fmt"
     "errors"
+    "time"
     "path/filepath"
+    "math/rand"
 
     "github.com/urfave/cli"
 
@@ -31,14 +33,17 @@ var CmdCreate = cli.Command{
 }
 
 func create(ctx *cli.Context) error {
+    var err error
+
+    var uid0, uid1, uid2, uid3, uid4, uid5, uid6 uint8
+    var bcc0, bcc1 uint8
+
     key    := ctx.String("key")
     amiibo := ctx.String("amiibo")
 
-    log.Infof("Key   : %s", key)
-    log.Infof("Amiibo: %s", amiibo)
+    log.Infof("Your key path    : %s", key)
+    log.Infof("Your amiibo path : %s", amiibo)
     log.Infof("------------------")
-
-    var err error
 
     // Check the retail bin file is or not exists
     err = fileIsExists(key, "The path of retail bin file is not exists, Please make sure it is absolute path")
@@ -54,26 +59,60 @@ func create(ctx *cli.Context) error {
         return nil
     }
 
+    // Generate serial
+    uid0 = randomInt(1, 255)
+    uid1 = randomInt(1, 255)
+    uid2 = randomInt(1, 255)
+    uid3 = randomInt(1, 255)
+    uid4 = randomInt(1, 255)
+    uid5 = randomInt(1, 255)
+    uid6 = randomInt(1, 255)
+
+    bcc0 = uid0 ^ uid1 ^ uid2
+    bcc1 = uid3 ^ uid4 ^ uid5 ^uid6
+
+    serial := mixSerial(uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1)
+
+    log.Infof("Generated serial : %s", serial)
+    log.Infof(
+        "Generated values : uid0=%d uid1=%d uid2=%d bcc0=%d uid3=%d uid4=%d uid5=%d uid6=%d bcc1=%d",
+        uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1,
+    )
+    log.Infof("------------------")
+
     // Load key first
+    log.Infof("Loading the key file")
+
     changerEngine := changer.NewChangerEngine()
 
     err = changerEngine.LoadAmiiboKeys(key)
     if err != nil {
-        log.Error(err.Error())
+        log.Errorf("=> %s", err.Error())
         return nil
+    }else{
+        log.Infof("=> OK")
     }
 
-    // Unpack the selected amiibo
+    // Unpack the selected file
+    log.Info("Unpacking the amiibo file")
+
     unpackFileBasename  := file.FileNameWithoutExtension(file.Basename(amiibo))
     unpackFileExtension := file.Extension(amiibo)[1:]
 
     unpackedFilename    := fmt.Sprintf("%s_decrypt.%s", unpackFileBasename, unpackFileExtension)
     unpackedFilePath    := filepath.Join(configs.ResultsPath, unpackedFilename)
 
+    log.Infof("=> Unpacked file path : %s", unpackedFilePath)
+
     err = changerEngine.UnpackAmiibo(amiibo, unpackedFilePath)
     if err != nil {
-        log.Error(err.Error())
+        log.Error("=> %s", err.Error())
         return nil
+    }else{
+        md5, _ := file.Md5Sum(unpackedFilePath)
+
+        log.Infof("=> OK")
+        log.Infof("=> MD5: %s", md5)
     }
 
     return nil
@@ -91,4 +130,14 @@ func fileIsExists(path string, message string) error {
     }
 
     return nil
+}
+
+func randomInt(min int, max int) uint8 {
+    rand.Seed(time.Now().UTC().UnixNano())
+
+    return uint8(rand.Intn(max - min) + min)
+}
+
+func mixSerial(uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1 uint8) string {
+    return fmt.Sprintf("%02X%02X%02X%02X%02X%02X%02X%02X%02X", uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1)
 }
