@@ -139,7 +139,22 @@ func create(ctx *cli.Context) error {
         log.Infof("=> MD5: %s", md5)
     }
 
-    // Pack the decrypted file
+    // Edit serial
+    log.Infof("Changing serial number")
+
+    copiedFile, err := os.OpenFile(copyUnpackedFilePath, os.O_RDWR, os.FileMode(0666))
+    if err != nil {
+        log.Fatalf("=> Cannot open the copied copiedFile: %v", err)
+    }
+    defer copiedFile.Close()
+
+    copiedFile.Seek(0, 0)
+    copiedFile.Write([]byte{ bcc1 })
+
+    copiedFile.Seek(0x1D4, 0)
+    copiedFile.Write([]byte{ bcc0, uid0, uid1, uid2, uid3, uid4, uid5, uid6 })
+
+    // Pack the duplicated and changed file
     log.Info("Packing the amiibo file")
 
     packFileBasename  := file.FileNameWithoutExtension(file.Basename(amiibo))
