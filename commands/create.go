@@ -1,11 +1,14 @@
 package commands
 
 import (
+    "fmt"
     "errors"
+    "path/filepath"
 
     "github.com/urfave/cli"
 
     "github.com/zeuxisoo/tools-amichanger/changer"
+    "github.com/zeuxisoo/tools-amichanger/configs"
     "github.com/zeuxisoo/tools-amichanger/utils/file"
     "github.com/zeuxisoo/tools-amichanger/utils/log"
 )
@@ -51,10 +54,23 @@ func create(ctx *cli.Context) error {
         return nil
     }
 
-    //
+    // Load key first
     changerEngine := changer.NewChangerEngine()
 
     err = changerEngine.LoadAmiiboKeys(key)
+    if err != nil {
+        log.Error(err.Error())
+        return nil
+    }
+
+    // Unpack the selected amiibo
+    unpackFileBasename  := file.FileNameWithoutExtension(file.Basename(amiibo))
+    unpackFileExtension := file.Extension(amiibo)[1:]
+
+    unpackedFilename    := fmt.Sprintf("%s_decrypt.%s", unpackFileBasename, unpackFileExtension)
+    unpackedFilePath    := filepath.Join(configs.ResultsPath, unpackedFilename)
+
+    err = changerEngine.UnpackAmiibo(amiibo, unpackedFilePath)
     if err != nil {
         log.Error(err.Error())
         return nil

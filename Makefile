@@ -1,8 +1,9 @@
 usage:
 	@echo
-	@echo "Command  : Description"
-	@echo "-------- : -----------------"
-	@echo "make ami : Create and build the ami files"
+	@echo "Command     : Description"
+	@echo "---------- : -----------------"
+	@echo "make ami   : Create and build the ami files"
+	@echo "make build : Build the main program"
 	@echo
 
 ami: clean-ami
@@ -16,3 +17,6 @@ ami: clean-ami
 
 clean-ami:
 	rm -rf changer/amiitool
+
+build:
+	go build *.go

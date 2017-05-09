@@ -2,6 +2,8 @@ package file
 
 import (
     "os"
+    "strings"
+    "path/filepath"
 )
 
 func IsExists(path string) (bool, error) {
@@ -15,4 +17,16 @@ func IsExists(path string) (bool, error) {
     }
 
     return true, err
+}
+
+func Basename(path string) string {
+    return filepath.Base(path)
+}
+
+func Extension(path string) string {
+    return filepath.Ext(path)
+}
+
+func FileNameWithoutExtension(basename string) string {
+    return strings.TrimSuffix(basename, Extension(basename))
 }
