@@ -19,6 +19,7 @@ func main() {
     app.Version = APP_VERSION
     app.Commands = []cli.Command{
         commands.CmdCreate,
+        commands.CmdMulti,
     }
     app.Flags = append(app.Flags, []cli.Flag{}...)
     app.Run(os.Args)
