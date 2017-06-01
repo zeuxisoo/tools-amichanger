@@ -31,6 +31,7 @@ func (this *Ami) Create(ctx *cli.Context) error {
 
     key    := ctx.String("key")
     amiibo := ctx.String("amiibo")
+    debug  := ctx.GlobalBool("debug")
 
     log.Infof("Your key path    : %s", key)
     log.Infof("Your amiibo path : %s", amiibo)
@@ -91,7 +92,9 @@ func (this *Ami) Create(ctx *cli.Context) error {
     unpackedFilename := fmt.Sprintf("%s_decrypt.bin", unpackFilename)
     unpackedFilePath := filepath.Join(configs.ResultsPath, unpackedFilename)
 
-    log.Infof("=> Unpacked file path : %s", unpackedFilePath)
+    if debug == true {
+        log.Infof("=> Unpacked file path : %s", unpackedFilePath)
+    }
 
     err = changerEngine.UnpackAmiibo(amiibo, unpackedFilePath)
     if err != nil {
@@ -111,7 +114,9 @@ func (this *Ami) Create(ctx *cli.Context) error {
     copyUnpackedFilename := fmt.Sprintf("%s_copy.bin", copyUnpackFilename)
     copyUnpackedFilePath := filepath.Join(configs.ResultsPath, copyUnpackedFilename)
 
-    log.Infof("=> Copied file path : %s", copyUnpackedFilePath)
+    if debug == true {
+        log.Infof("=> Copied file path : %s", copyUnpackedFilePath)
+    }
 
     err = file.Copy(unpackedFilePath, copyUnpackedFilePath)
     if err != nil {
@@ -146,7 +151,9 @@ func (this *Ami) Create(ctx *cli.Context) error {
     packedFilename := fmt.Sprintf("%s_%s.bin", packFilename, serial)
     packedFilePath := filepath.Join(configs.ResultsPath, packedFilename)
 
-    log.Infof("=> Packed file path : %s", packedFilePath)
+    if debug == true {
+        log.Infof("=> Packed file path : %s", packedFilePath)
+    }
 
     err = changerEngine.PackAmiibo(copyUnpackedFilePath, packedFilePath)
     if err != nil {
@@ -161,10 +168,17 @@ func (this *Ami) Create(ctx *cli.Context) error {
 
     // Remove decrypted and copied file
     log.Infof("Deleting generated files")
-    log.Infof("=> %s", unpackedFilePath)
-    log.Infof("=> %s", copyUnpackedFilePath)
+
+    if debug == true {
+        log.Infof("=> %s", unpackedFilePath)
+        log.Infof("=> %s", copyUnpackedFilePath)
+    }
 
     file.Delete(unpackedFilePath, copyUnpackedFilePath)
+
+    // Show result
+    log.Infof("------------------")
+    log.Infof("Generated file: %s", packedFilePath)
 
     return nil
 }

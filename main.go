@@ -21,6 +21,14 @@ func main() {
         commands.CmdCreate,
         commands.CmdMulti,
     }
-    app.Flags = append(app.Flags, []cli.Flag{}...)
+    app.Flags = append(
+        app.Flags,
+        []cli.Flag{
+            cli.BoolFlag{
+                Name: "debug",
+                Usage: "show the debug information",
+            },
+        }...
+    )
     app.Run(os.Args)
 }
