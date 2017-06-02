@@ -2,6 +2,9 @@ package commands
 
 import (
     "github.com/urfave/cli"
+
+    "github.com/zeuxisoo/tools-amichanger/commands/shared"
+    "github.com/zeuxisoo/tools-amichanger/utils/log"
 )
 
 var CmdMulti = cli.Command{
@@ -20,11 +23,28 @@ var CmdMulti = cli.Command{
         },
         cli.IntFlag{
             Name: "count",
-            Usage: "how many files you want to generate",
+            Usage: "How many files you want to generate",
+            Value: 1,
         },
     },
 }
 
 func multi(ctx *cli.Context) error {
+    count := ctx.Int("count")
+
+    log.Infof("Generate count: %d\n", count)
+
+    ami := shared.NewAmi()
+
+    for i:=1; i<=count; i++ {
+        log.Infof("=====> Current generate file: %d\n", i)
+
+        if err := ami.Create(ctx); err != nil {
+            return err
+        }
+
+        log.Infof("Done!\n")
+    }
+
     return nil
 }
