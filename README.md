@@ -10,7 +10,7 @@ Install the vendors
 
 Download the tools packages
 
-    make ami
+    make amiitool
 
 ## Build
 
