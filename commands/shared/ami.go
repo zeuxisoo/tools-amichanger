@@ -23,7 +23,7 @@ func NewAmi() *Ami {
     return &Ami{}
 }
 
-func (this *Ami) Create(ctx *cli.Context) error {
+func (this *Ami) Generate(ctx *cli.Context) error {
     var err error
 
     var uid0, uid1, uid2, uid3, uid4, uid5, uid6 uint8

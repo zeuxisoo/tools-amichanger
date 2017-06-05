@@ -39,7 +39,7 @@ func multi(ctx *cli.Context) error {
     for i:=1; i<=count; i++ {
         log.Infof("=====> Current generate file: %d\n", i)
 
-        if err := ami.Create(ctx); err != nil {
+        if err := ami.Generate(ctx); err != nil {
             return err
         }
 

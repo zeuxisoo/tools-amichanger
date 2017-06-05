@@ -26,7 +26,7 @@ var CmdCreate = cli.Command{
 func create(ctx *cli.Context) error {
     ami := shared.NewAmi()
 
-    if err := ami.Create(ctx); err != nil {
+    if err := ami.Generate(ctx); err != nil {
         return err
     }
 
