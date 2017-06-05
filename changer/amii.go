@@ -1,4 +1,4 @@
-package shared
+package changer
 
 import (
     "os"
@@ -16,14 +16,14 @@ import (
     "github.com/zeuxisoo/tools-amichanger/utils/log"
 )
 
-type Ami struct {
+type Amii struct {
 }
 
-func NewAmi() *Ami {
-    return &Ami{}
+func NewAmii() *Amii {
+    return &Amii{}
 }
 
-func (this *Ami) Generate(ctx *cli.Context) error {
+func (this *Amii) Generate(ctx *cli.Context) error {
     var err error
 
     var uid0, uid1, uid2, uid3, uid4, uid5, uid6 uint8

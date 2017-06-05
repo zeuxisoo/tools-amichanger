@@ -3,7 +3,7 @@ package commands
 import (
     "github.com/urfave/cli"
 
-    "github.com/zeuxisoo/tools-amichanger/commands/shared"
+    "github.com/zeuxisoo/tools-amichanger/changer"
 )
 
 var CmdCreate = cli.Command{
@@ -24,7 +24,7 @@ var CmdCreate = cli.Command{
 }
 
 func create(ctx *cli.Context) error {
-    ami := shared.NewAmi()
+    ami := changer.NewAmii()
 
     if err := ami.Generate(ctx); err != nil {
         return err

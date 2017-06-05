@@ -3,7 +3,7 @@ package commands
 import (
     "github.com/urfave/cli"
 
-    "github.com/zeuxisoo/tools-amichanger/commands/shared"
+    "github.com/zeuxisoo/tools-amichanger/changer"
     "github.com/zeuxisoo/tools-amichanger/utils/log"
 )
 
@@ -34,7 +34,7 @@ func multi(ctx *cli.Context) error {
 
     log.Infof("Generate count: %d\n", count)
 
-    ami := shared.NewAmi()
+    ami := changer.NewAmii()
 
     for i:=1; i<=count; i++ {
         log.Infof("=====> Current generate file: %d\n", i)
