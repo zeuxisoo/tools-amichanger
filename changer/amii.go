@@ -61,7 +61,7 @@ func (this *Amii) Generate(ctx *cli.Context) error {
     uid6 = randomInt(1, 255)
 
     bcc0 = uid0 ^ uid1 ^ uid2
-    bcc1 = uid3 ^ uid4 ^ uid5 ^uid6
+    bcc1 = uid3 ^ uid4 ^ uid5 ^ uid6
 
     serial := mixSerial(uid0, uid1, uid2, bcc0, uid3, uid4, uid5, uid6, bcc1)
 
