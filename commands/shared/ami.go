@@ -10,7 +10,7 @@ import (
 
     "github.com/urfave/cli"
 
-    "github.com/zeuxisoo/tools-amichanger/changer"
+    "github.com/zeuxisoo/tools-amichanger/binding"
     "github.com/zeuxisoo/tools-amichanger/configs"
     "github.com/zeuxisoo/tools-amichanger/utils/file"
     "github.com/zeuxisoo/tools-amichanger/utils/log"
@@ -75,7 +75,7 @@ func (this *Ami) Generate(ctx *cli.Context) error {
     // Load key first
     log.Infof("Loading the key file")
 
-    changerEngine := changer.NewChangerEngine()
+    changerEngine := binding.NewChangerEngine()
 
     err = changerEngine.LoadAmiiboKeys(key)
     if err != nil {

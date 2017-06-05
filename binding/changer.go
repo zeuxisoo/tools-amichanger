@@ -1,4 +1,4 @@
-package changer
+package binding
 
 /*
 #cgo CFLAGS: -I${SRCDIR}/amiitool/include
