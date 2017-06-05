@@ -1,4 +1,4 @@
-#include "changer.h"
+#include "amiitool.h"
 
 uint8_t original[NTAG215_SIZE];
 uint8_t modified[NFC3D_AMIIBO_SIZE];
