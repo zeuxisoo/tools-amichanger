@@ -75,9 +75,9 @@ func (this *Amii) Generate(ctx *cli.Context) error {
     // Load key first
     log.Infof("Loading the key file")
 
-    amiiToolEngine := binding.NewAmiiToolEngine()
+    amiiTool := binding.NewAmiiTool()
 
-    err = amiiToolEngine.LoadAmiiboKeys(key)
+    err = amiiTool.LoadAmiiboKeys(key)
     if err != nil {
         log.Errorf("=> %s", err.Error())
         return nil
@@ -96,7 +96,7 @@ func (this *Amii) Generate(ctx *cli.Context) error {
         log.Infof("=> Unpacked file path : %s", unpackedFilePath)
     }
 
-    err = amiiToolEngine.UnpackAmiibo(amiibo, unpackedFilePath)
+    err = amiiTool.UnpackAmiibo(amiibo, unpackedFilePath)
     if err != nil {
         log.Error("=> %s", err.Error())
         return nil
@@ -155,7 +155,7 @@ func (this *Amii) Generate(ctx *cli.Context) error {
         log.Infof("=> Packed file path : %s", packedFilePath)
     }
 
-    err = amiiToolEngine.PackAmiibo(copyUnpackedFilePath, packedFilePath)
+    err = amiiTool.PackAmiibo(copyUnpackedFilePath, packedFilePath)
     if err != nil {
         log.Error("=> %s", err.Error())
         return nil

@@ -28,15 +28,15 @@ const (
 )
 
 
-type AmiiToolEngine struct {
+type AmiiTool struct {
     nfc3dAmiiboKeys C.nfc3d_amiibo_keys
 }
 
-func NewAmiiToolEngine() *AmiiToolEngine {
-    return &AmiiToolEngine{}
+func NewAmiiTool() *AmiiTool {
+    return &AmiiTool{}
 }
 
-func (this *AmiiToolEngine) LoadAmiiboKeys(path string) error {
+func (this *AmiiTool) LoadAmiiboKeys(path string) error {
     keyPath := C.CString(path)
 
     if C.amiibo_load_keys(&this.nfc3dAmiiboKeys, keyPath) == false {
@@ -46,7 +46,7 @@ func (this *AmiiToolEngine) LoadAmiiboKeys(path string) error {
     return nil
 }
 
-func (this *AmiiToolEngine) UnpackAmiibo(originalFilePath string, unpackFilePath string) error {
+func (this *AmiiTool) UnpackAmiibo(originalFilePath string, unpackFilePath string) error {
     fromFilePath    := C.CString(originalFilePath)
     toFilePath      := C.CString(unpackFilePath)
     upackFileStatus := C.amiibo_unpack_dump_file(&this.nfc3dAmiiboKeys, fromFilePath, toFilePath)
@@ -78,7 +78,7 @@ func (this *AmiiToolEngine) UnpackAmiibo(originalFilePath string, unpackFilePath
     return nil
 }
 
-func (this *AmiiToolEngine) PackAmiibo(unpackFilePath string, packFilePath string) error {
+func (this *AmiiTool) PackAmiibo(unpackFilePath string, packFilePath string) error {
     fromFilePath   := C.CString(unpackFilePath)
     toFilePath     := C.CString(packFilePath)
     packFileStatus := C.amiibo_pack_dump_file(&this.nfc3dAmiiboKeys, fromFilePath, toFilePath)
