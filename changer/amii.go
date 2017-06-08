@@ -10,7 +10,7 @@ import (
 
     "github.com/urfave/cli"
 
-    "github.com/zeuxisoo/tools-amichanger/binding"
+    "github.com/zeuxisoo/tools-amichanger/wrapper"
     "github.com/zeuxisoo/tools-amichanger/configs"
     "github.com/zeuxisoo/tools-amichanger/utils/file"
     "github.com/zeuxisoo/tools-amichanger/utils/log"
@@ -75,7 +75,7 @@ func (this *Amii) Generate(ctx *cli.Context) error {
     // Load key first
     log.Infof("Loading the key file")
 
-    amiiTool := binding.NewAmiiTool()
+    amiiTool := wrapper.NewAmiiTool()
 
     err = amiiTool.LoadAmiiboKeys(key)
     if err != nil {
